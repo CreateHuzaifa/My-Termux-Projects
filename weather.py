@@ -5,7 +5,7 @@ print("=========================================")
 print("🤖 [INVYRAX]: Kya bolti company! System chalu hai.")
 print("=========================================")
 
-city = input("🚨 Kaunse ilake ka scene dekhna hai? City daal: ")
+city = input("🚨 Kaunse ilake ka scene dekhna hai Huzaifa? City daal: ")
 url = f"https://wttr.in/{city}?format=j1"
 
 print(f"\n⏳ Apun check kar rha hai mitr... {city.title()} ka kya mahaul hai...")
