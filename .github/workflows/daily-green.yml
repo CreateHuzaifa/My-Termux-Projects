@@ -1,0 +1,49 @@
+name: Natural Random Streak
+
+on:
+  schedule:
+    - cron: '30 17 * * *' # Har roz Indian Time ke hisab se raat 11:00 baje chalega
+  workflow_dispatch: # Agar kabhi manually chalana ho toh uske liye
+
+jobs:
+  make-contribution:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v3
+      
+    - name: Check Random Luck (Bhai Decision Matrix)
+      id: luck_check
+      run: |
+        # 1 se 100 ke beech ek random number generate karo
+        LUCK=$((1 + RANDOM % 100))
+        echo "Bhai ka Aaj ka Luck Number: $LUCK"
+        
+        # 65 se chota number aaya toh push hoga, varna chutti (gap)
+        if [ $LUCK -le 65 ]; then
+          echo "GO_AHEAD=true" >> $GITHUB_ENV
+          echo "😎 Aaj ka scene set hai, commit karenge!"
+        else
+          echo "GO_AHEAD=false" >> $GITHUB_ENV
+          echo "😴 Aaj aaram din hai, no contribution today."
+        fi
+         
+    - name: Make changes (Only on Luck Days)
+      if: env.GO_AHEAD == 'true'
+      run: |
+        echo "System Pulse Checked: $(date)" > daily_status.txt
+         
+    - name: Commit changes (Only on Luck Days)
+      if: env.GO_AHEAD == 'true'
+      run: |
+        git config --local user.email "action@github.com"
+        git config --local user.name "INVYRAX AI Bot"
+        git add daily_status.txt
+        git commit -m "INVYRAX System Update: $(date +%F)"
+         
+    - name: Push changes (Only on Luck Days)
+      if: env.GO_AHEAD == 'true'
+      uses: ad-m/github-push-action@master
+      with:
+        github_token: ${{ secrets.GITHUB_TOKEN }}
+        branch: main

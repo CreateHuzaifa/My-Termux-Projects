@@ -1,5 +1,5 @@
 #!/bin/bash
-
+cd ~/projects
 # Check if a commit message was provided
 if [ -z "$1" ]
 then
